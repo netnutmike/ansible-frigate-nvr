@@ -1,0 +1,29 @@
+---
+- hosts: dvr
+  become: true
+
+  vars:
+    docker_users: ['{{ ansible_user }}']
+
+  handlers:
+    - name: reboot pi
+      ansible.builtin.reboot:
+
+  pre_tasks:
+    - name: Update apt cache.
+      ansible.builtin.apt: update_cache=yes cache_valid_time=600
+
+  roles:
+    - geerlingguy.docker
+
+  tasks:
+    - name: Increase gpu_mem to maximum in config.txt
+      community.general.ini_file:
+        path: /boot/config.txt
+        no_extra_spaces: true
+        section: all
+        option: 'gpu_mem'
+        value: '256'
+        mode: 0755
+        backup: false
+      notify: reboot pi

@@ -1,0 +1,29 @@
+database:
+  path: /db/frigate.db
+  
+{% if frigate_configure_mqtt %}
+mqtt:
+  host: {{ frigate_mqtt_host }}
+  topic_prefix: frigate
+  user: {{ frigate_mqtt_user }}
+  password: {{ frigafrigate_mqtt_passwordte_mosquitto_password }}
+
+{% endif %}
+
+detectors:
+  coral:
+    type: edgetpu
+    device: usb
+cameras:
+  office:
+    ffmpeg:
+      inputs:
+        - path: rtsp://10.0.10.10:554/rtsp
+          roles:
+            - detect
+            - rtmp
+    rtmp:
+      enabled: False # RTMP should be disabled if your stream is not H264
+    detect:
+      width: 1280 # update for your camera's resolution
+      height: 720 # update for your camera's resolution

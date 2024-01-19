@@ -6,7 +6,7 @@ mqtt:
   host: {{ frigate_mqtt_host }}
   topic_prefix: frigate
   user: {{ frigate_mqtt_user }}
-  password: {{ frigafrigate_mqtt_passwordte_mosquitto_password }}
+  password: {{ frigate_mqtt_password }}
 
 {% endif %}
 

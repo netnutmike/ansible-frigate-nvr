@@ -18,13 +18,13 @@ One more thing that is required is Ansbile installed on a machine to run this sc
 
 There are a few things that need to be setup before you are ready to run the installation script:
 
-1. Prepare a SBC computer with the most recent version of the OS running on it
+1. Prepare a SBC computer with the most recent version of the OS running on it (this script is tested regularly using ubuntu 22.04 on a Raspberry Pi and Orangepi CM4)
 2. Be sure you can login via SSH, be sure to write down the username and password
-> If possible try to setup setup an [SSH Key Pair](https://www.raspberrypi-spy.co.uk/2019/02/setting-up-ssh-keys-on-the-raspberry-pi/) to automatically login to the SBC.  If you are not sure how to do that, do not worry, I will provide you the option to login with a password, it is just not s secure.
-3. Make sure your SSD or NVMe drive is mounted in your `/mnt` directory as `/mnt/frigate` 
+> If possible try to setup setup an [SSH Key Pair](https://www.raspberrypi-spy.co.uk/2019/02/setting-up-ssh-keys-on-the-raspberry-pi/) to automatically login to the SBC.  If you are not sure how to do that, do not worry, I will provide you the option to login with a password, it is just not as secure.
+3. Make sure your SSD or NVMe drive is mounted as `/video_files`
 4. Download this Repository to your computer that has Ansible installed on it
-5. Edit the hosts.ini file and change the `frigate` under `[DVR]` to your hostname or IP address
-6. Change the `ansible_user=admin` to the username that is used to login to your SBC
+5. Edit the hosts.ini file and change the `changeme` under `[DVR]` to your hostname or IP address
+6. Change the `ansible_user=changeme` to the username that is used to login to your SBC
 7. If you plan to use an MQTT server refer to the ==Setup Frigate to talk to MQTT== below
 8. If you want to setup your cameras before installing Frigate, refer to the ==Setup Frigate Cameras Before Install==.  If you do not set them up before installing, there is a good guide here: [The Ultimate Guide to Frigate NVR Notifications](https://www.simplepush.io/blog/frigate-nvr-push-notification-guide#run-mosquitto-mqtt-in-docker).
 

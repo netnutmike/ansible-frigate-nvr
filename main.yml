@@ -13,10 +13,82 @@
     - name: Update apt cache.
       ansible.builtin.apt: update_cache=yes cache_valid_time=600
 
-  roles:
-    - geerlingguy.docker
+    - name: Upgrade all packages
+      apt: upgrade=dist
+      when: ansible_os_family == "Debian"
 
   tasks:
+
+    - name: Install required system packages
+      apt:
+        pkg:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - software-properties-common
+          - python3-pip
+          - virtualenv
+          - python3-setuptools
+        state: latest
+        update_cache: true
+
+    - name: Add Docker GPG apt Key
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+
+    - name: Add Docker Repository
+      apt_repository:
+        repo: deb https://download.docker.com/linux/ubuntu focal stable
+        state: present
+
+    - name: Update apt and install docker-ce
+      apt:
+    #    name: docker-ce
+        name: docker-ce=5:24.0.6-1~ubuntu.20.04~focal
+        state: latest
+        update_cache: true
+
+    - name: Ensure pip is installed.
+      ansible.builtin.apt:
+        name: python3-pip
+        state: present
+
+    - name: Install required python libraries.
+      ansible.builtin.pip:
+        name:
+          - docker
+          - docker-compose
+        state: present
+        #extra_args: --break-system-package
+
+    - name: Create Frigate folders on Pi.
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: directory
+        mode: '0755'
+      become: false
+      with_items:
+        - "~/frigate"
+      register: create_folders
+
+    - name: Copy Frigate files to Pi.
+      ansible.builtin.template:
+        src: "frigate/{{ item }}"
+        dest: "~/frigate/{{ item }}"
+        mode: '0640'
+      become: false
+      with_items:
+        - docker-compose.yml
+        - frigate.yml
+
+
+    - name: Install Frigate with docker-compose and run.
+      community.docker.docker_compose:
+        project_src: "/home/frigate/frigate"
+        build: false
+      become: true
+
     - name: Increase gpu_mem to maximum in config.txt
       community.general.ini_file:
         path: /boot/config.txt

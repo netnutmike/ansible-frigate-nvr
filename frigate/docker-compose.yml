@@ -4,17 +4,18 @@ services:
     container_name: frigate
     # privileged: true
     restart: unless-stopped
-    # See: https://github.com/blakeblackshear/frigate/issues/5046
-    # image: ghcr.io/blakeblackshear/frigate:stable
     image: ghcr.io/blakeblackshear/frigate:stable
     shm_size: "64mb"
     devices:
       - /dev/bus/usb:/dev/bus/usb # passes the USB Coral
-      - /dev/apex_0:/dev/apex_0 # passes a PCIe Coral, follow driver instructions here https://coral.ai/docs/m2/get-started/#2a-on-linux
+      # for PCIe Coral, uncomment the following line
+      #- /dev/apex_0:/dev/apex_0 # passes a PCIe Coral, follow driver instructions here https://coral.ai/docs/m2/get-started/#2a-on-linux
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - ~/frigate/frigate.yml:/config/config.yml:ro
+      - {{ frigate_config_path }}/frigate.yml:/config/config.yml
+      - {{ frigate_config_path }}/db:/db
       - {{ frigate_storage_path }}:/media/frigate
+      - {{ frigate_storage_path }}/logs:/dev/shm
       #- type: tmpfs # Optional: 1GB of memory, reduces SSD/SD Card wear
       #  target: /tmp/cache
       #  tmpfs:

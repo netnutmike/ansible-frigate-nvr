@@ -29,6 +29,8 @@
           - python3-pip
           - virtualenv
           - python3-setuptools
+          - docker
+          - docker-compose
         state: latest
         update_cache: true
 
@@ -42,26 +44,6 @@
         repo: deb https://download.docker.com/linux/ubuntu focal stable
         state: present
 
-    - name: Update apt and install docker-ce
-      apt:
-    #    name: docker-ce
-        name: docker-ce=5:24.0.6-1~ubuntu.20.04~focal
-        state: latest
-        update_cache: true
-
-    - name: Ensure pip is installed.
-      ansible.builtin.apt:
-        name: python3-pip
-        state: present
-
-    - name: Install required python libraries.
-      ansible.builtin.pip:
-        name:
-          - docker
-          - docker-compose
-        state: present
-        #extra_args: --break-system-package
-
     - name: Create Frigate folders on Pi.
       ansible.builtin.file:
         path: "{{ item }}"
@@ -70,7 +52,19 @@
       become: false
       with_items:
         - "~/frigate"
+        - "~/frigate/db"
       register: create_folders
+
+    - name: Create video_store folders on Pi.
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: directory
+        mode: '0766'
+      become: true
+      with_items:
+        - "/video_files"
+        - "/video_files/logs"             # store logs here where there is more space and less activity on the SD Card
+      register: create_video_folder
 
     - name: Copy Frigate files to Pi.
       ansible.builtin.template:

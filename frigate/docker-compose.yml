@@ -12,8 +12,8 @@ services:
       #- /dev/apex_0:/dev/apex_0 # passes a PCIe Coral, follow driver instructions here https://coral.ai/docs/m2/get-started/#2a-on-linux
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - {{ frigate_config_path }}/frigate.yml:/config/config.yml
-      - {{ frigate_config_path }}/db:/db
+      - {{ frigate_config_path }}/frigate/frigate.yml:/config/config.yml
+      - {{ frigate_config_path }}/frigate/db:/db
       - {{ frigate_storage_path }}:/media/frigate
       - {{ frigate_storage_path }}/logs:/dev/shm
       #- type: tmpfs # Optional: 1GB of memory, reduces SSD/SD Card wear

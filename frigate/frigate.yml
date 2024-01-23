@@ -14,6 +14,15 @@ detectors:
   coral:
     type: edgetpu
     device: usb
+
+#set the global defaults, each camera can override these defaults
+detect:
+  width: 1920
+  height: 1080
+  fps: 5
+  enabled: True
+  max_disappeared: 25
+
 cameras:
   office:
     ffmpeg:
@@ -24,6 +33,8 @@ cameras:
             - rtmp
     rtmp:
       enabled: False # RTMP should be disabled if your stream is not H264
+      
+    # override defaults for this camera  
     detect:
       width: 1280 # update for your camera's resolution
       height: 720 # update for your camera's resolution
